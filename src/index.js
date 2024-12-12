@@ -3,11 +3,16 @@ const mongoose = require('mongoose')
 const { MongoClient } = require('mongodb')
 const Apod = require('./models/data.model.js')
 const mongodb = require('./dbconnect/mongodb.js')
+const path = require('path')
 
 const app = express()
-app.use(express.json())
+app.use(express.json());
 
 PORT = 3000
+
+app.get('/picture', (req, res) =>{
+    res.sendFile(__dirname + '/pic/2.jpg')
+})
 
 app.get('/',(req, res) =>{
     res.send(
@@ -34,10 +39,13 @@ app.post('/api/apod', async(req, res) => {
     }
 })
 
+const apodRouter = require('./routes/routes.js')
+const picRouter = require('./routes/picroutes.js')
+const vidRouter = require('./routes/vidroutes.js')
 
-const fileRouter = require('./routes/routes.js')
-
-app.use('/api/apod', fileRouter)
+app.use('/api/apod', apodRouter)
+app.use('/picture', picRouter)
+app.use('/video', vidRouter)
 
 app.listen(PORT, async() => {
     console.log('Ready!')
